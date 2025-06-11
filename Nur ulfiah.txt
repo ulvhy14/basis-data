@@ -1,0 +1,306 @@
+Copy and replace MathType.exe to the installation directory.
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Password for user postgres:
+
+psql (17.5)
+WARNING: Console code page (437) differs from Windows code page (1252)
+         8-bit characters might not work correctly. See psql reference
+         page "Notes for Windows users" for details.
+Type "help" for help.
+
+postgres=# -- DROP tabel jika sudah ada (untuk menghindari error)
+postgres=# DROP TABLE IF EXISTS Transaksi;
+DROP TABLE
+postgres=# DROP TABLE IF EXISTS Mahasiswa;
+DROP TABLE
+postgres=# DROP TABLE IF EXISTS Produk;
+DROP TABLE
+postgres=#
+postgres=# DROP TABLE IF EXISTS Pendaftaran;
+DROP TABLE
+postgres=# DROP TABLE IF EXISTS Mahasiswi;
+DROP TABLE
+postgres=# DROP TABLE IF EXISTS Kursus;
+DROP TABLE
+postgres=#
+postgres=# -- TEMA RETAIL (Mahasiswa)
+postgres=# CREATE TABLE Mahasiswa (
+postgres(#     id_mahasiswa INT PRIMARY KEY,
+postgres(#     nama_mahasiswa VARCHAR(50),
+postgres(#     jurusan VARCHAR(50)
+postgres(# );
+CREATE TABLE
+postgres=#
+postgres=# CREATE TABLE Produk (
+postgres(#     id_produk INT PRIMARY KEY,
+postgres(#     nama_produk VARCHAR(100),
+postgres(#     harga INT
+postgres(# );
+CREATE TABLE
+postgres=#
+postgres=# CREATE TABLE Transaksi (
+postgres(#     id_transaksi INT PRIMARY KEY,
+postgres(#     id_mahasiswa INT,
+postgres(#     id_produk INT,
+postgres(#     jumlah_beli INT,
+postgres(#     FOREIGN KEY (id_mahasiswa) REFERENCES Mahasiswa(id_mahasiswa),
+postgres(#     FOREIGN KEY (id_produk) REFERENCES Produk(id_produk)
+postgres(# );
+CREATE TABLE
+postgres=#
+postgres=# -- TEMA PENDIDIKAN (Mahasiswi)
+postgres=# CREATE TABLE Mahasiswi (
+postgres(#     id_mahasiswi INT PRIMARY KEY,
+postgres(#     nama_mahasiswi VARCHAR(50),
+postgres(#     program_studi VARCHAR(50)
+postgres(# );
+CREATE TABLE
+postgres=#
+postgres=# CREATE TABLE Kursus (
+postgres(#     id_kursus INT PRIMARY KEY,
+postgres(#     nama_kursus VARCHAR(100),
+postgres(#     jumlah_sks INT
+postgres(# );
+CREATE TABLE
+postgres=#
+postgres=# CREATE TABLE Pendaftaran (
+postgres(#     id_pendaftaran INT PRIMARY KEY,
+postgres(#     id_mahasiswi INT,
+postgres(#     id_kursus INT,
+postgres(#     semester_ke INT,
+postgres(#     FOREIGN KEY (id_mahasiswi) REFERENCES Mahasiswi(id_mahasiswi),
+postgres(#     FOREIGN KEY (id_kursus) REFERENCES Kursus(id_kursus)
+postgres(# );
+CREATE TABLE
+postgres=# -- Mahasiswa
+postgres=# INSERT INTO Mahasiswa VALUES (1, 'salman', 'Teknik sipil');
+INSERT 0 1
+postgres=# INSERT INTO Mahasiswa VALUES (2, 'adee', 'geografi');
+INSERT 0 1
+postgres=# INSERT INTO Mahasiswa VALUES (3, 'nurul', 'akutansi'):
+postgres-# INSERT INTO Mahasiswa VALUES (4, 'echa', 'manajemen');
+ERROR:  syntax error at or near ":"
+LINE 1: INSERT INTO Mahasiswa VALUES (3, 'nurul', 'akutansi'):
+                                                             ^
+postgres=# INSERT INTO Mahasiswa VALUES (5, 'dimas', 'PGSD');
+INSERT 0 1
+postgres=#
+postgres=# -- Produk
+postgres=# INSERT INTO Produk VALUES (101, 'Pulpen', 3000);
+INSERT 0 1
+postgres=# INSERT INTO Produk VALUES (102, 'Buku Tulis', 5000);
+INSERT 0 1
+postgres=# INSERT INTO Produk VALUES (103, 'Ruler', 2000);
+INSERT 0 1
+postgres=# INSERT INTO Produk VALUES (104, 'Tas', 50000);
+INSERT 0 1
+postgres=# INSERT INTO Produk VALUES (105, 'Botol Minum', 15000);
+INSERT 0 1
+postgres=#
+postgres=# -- Transaksi
+postgres=# INSERT INTO Transaksi VALUES (1, 1, 101, 2);
+INSERT 0 1
+postgres=# INSERT INTO Transaksi VALUES (2, 2, 102, 1);
+INSERT 0 1
+postgres=# INSERT INTO Transaksi VALUES (3, 3, 104, 1);
+ERROR:  insert or update on table "transaksi" violates foreign key constraint "transaksi_id_mahasiswa_fkey"
+DETAIL:  Key (id_mahasiswa)=(3) is not present in table "mahasiswa".
+postgres=# INSERT INTO Transaksi VALUES (4, 1, 105, 1);
+INSERT 0 1
+postgres=# INSERT INTO Transaksi VALUES (5, 5, 103, 3);
+INSERT 0 1
+postgres=#
+postgres=# -- Mahasiswi
+postgres=# INSERT INTO Mahasiswi VALUES (1, 'malia', 'pendidikan ipa');
+INSERT 0 1
+postgres=# INSERT INTO Mahasiswi VALUES (2, 'ica', 'statistika');
+INSERT 0 1
+postgres=# INSERT INTO Mahasiswi VALUES (3, 'lala', 'Pendidikan Bahasa Inggris');
+INSERT 0 1
+postgres=# INSERT INTO Mahasiswi VALUES (4, 'sarra', 'Pendidikan Fisika');
+INSERT 0 1
+postgres=# INSERT INTO Mahasiswi VALUES (5, 'pita', 'Pendidikan matematika');
+INSERT 0 1
+postgres=#
+postgres=# -- Kursus
+postgres=# INSERT INTO Kursus VALUES (201, 'Matematika Dasar', 3);
+INSERT 0 1
+postgres=# INSERT INTO Kursus VALUES (202, 'Bahasa Indonesia', 2);
+INSERT 0 1
+postgres=# INSERT INTO Kursus VALUES (203, 'Fisika Umum', 4);
+INSERT 0 1
+postgres=# INSERT INTO Kursus VALUES (204, 'Sejarah Dunia', 2);
+INSERT 0 1
+postgres=# INSERT INTO Kursus VALUES (205, 'Bahasa Inggris', 3);
+INSERT 0 1
+postgres=#
+postgres=# -- Pendaftaran
+postgres=# INSERT INTO Pendaftaran VALUES (1, 1, 201, 1);
+INSERT 0 1
+postgres=# INSERT INTO Pendaftaran VALUES (2, 2, 202, 2);
+INSERT 0 1
+postgres=# INSERT INTO Pendaftaran VALUES (3, 3, 205, 3);
+INSERT 0 1
+postgres=# INSERT INTO Pendaftaran VALUES (4, 4, 203, 1);
+INSERT 0 1
+postgres=# INSERT INTO Pendaftaran VALUES (5, 5, 204, 2);
+INSERT 0 1
+postgres=# SELECT * FROM Mahasiswa;
+ id_mahasiswa | nama_mahasiswa |   jurusan
+--------------+----------------+--------------
+            1 | salman         | Teknik sipil
+            2 | adee           | geografi
+            5 | dimas          | PGSD
+(3 rows)
+
+
+postgres=# SELECT * FROM Produk;
+ id_produk | nama_produk | harga
+-----------+-------------+-------
+       101 | Pulpen      |  3000
+       102 | Buku Tulis  |  5000
+       103 | Ruler       |  2000
+       104 | Tas         | 50000
+       105 | Botol Minum | 15000
+(5 rows)
+
+
+postgres=# SELECT * FROM Transaksi;
+ id_transaksi | id_mahasiswa | id_produk | jumlah_beli
+--------------+--------------+-----------+-------------
+            1 |            1 |       101 |           2
+            2 |            2 |       102 |           1
+            4 |            1 |       105 |           1
+            5 |            5 |       103 |           3
+(4 rows)
+
+
+postgres=#
+postgres=# SELECT * FROM Mahasiswi;
+ id_mahasiswi | nama_mahasiswi |       program_studi
+--------------+----------------+---------------------------
+            1 | malia          | pendidikan ipa
+            2 | ica            | statistika
+            3 | lala           | Pendidikan Bahasa Inggris
+            4 | sarra          | Pendidikan Fisika
+            5 | pita           | Pendidikan matematika
+(5 rows)
+
+
+postgres=# SELECT * FROM Kursus;
+ id_kursus |   nama_kursus    | jumlah_sks
+-----------+------------------+------------
+       201 | Matematika Dasar |          3
+       202 | Bahasa Indonesia |          2
+       203 | Fisika Umum      |          4
+       204 | Sejarah Dunia    |          2
+       205 | Bahasa Inggris   |          3
+(5 rows)
+
+
+postgres=# SELECT * FROM Pendaftaran;
+ id_pendaftaran | id_mahasiswi | id_kursus | semester_ke
+----------------+--------------+-----------+-------------
+              1 |            1 |       201 |           1
+              2 |            2 |       202 |           2
+              3 |            3 |       205 |           3
+              4 |            4 |       203 |           1
+              5 |            5 |       204 |           2
+(5 rows)
+
+
+postgres=# -- Update Mahasiswa
+postgres=# UPDATE Mahasiswa SET jurusan = 'Teknik Elektro' WHERE id = 4;
+ERROR:  column "id" does not exist
+LINE 1: ...PDATE Mahasiswa SET jurusan = 'Teknik Elektro' WHERE id = 4;
+                                                                ^
+postgres=#
+postgres=# -- Update Produk
+postgres=# UPDATE Produk SET harga = 4500 WHERE id_produk = 102;
+UPDATE 1
+postgres=#
+postgres=# -- Update Mahasiswi
+postgres=# UPDATE Mahasiswi SET prodi = 'Pendidikan Bahasa dan Sastra' WHERE id = 3;
+ERROR:  column "id" does not exist
+LINE 1: ...swi SET prodi = 'Pendidikan Bahasa dan Sastra' WHERE id = 3;
+                                                                ^
+postgres=# SELECT * FROM Mahasiswa;
+ id_mahasiswa | nama_mahasiswa |   jurusan
+--------------+----------------+--------------
+            1 | salman         | Teknik sipil
+            2 | adee           | geografi
+            5 | dimas          | PGSD
+(3 rows)
+
+
+postgres=# SELECT * FROM Produk;
+ id_produk | nama_produk | harga
+-----------+-------------+-------
+       101 | Pulpen      |  3000
+       103 | Ruler       |  2000
+       104 | Tas         | 50000
+       105 | Botol Minum | 15000
+       102 | Buku Tulis  |  4500
+(5 rows)
+
+
+postgres=# SELECT * FROM Mahasiswi;
+ id_mahasiswi | nama_mahasiswi |       program_studi
+--------------+----------------+---------------------------
+            1 | malia          | pendidikan ipa
+            2 | ica            | statistika
+            3 | lala           | Pendidikan Bahasa Inggris
+            4 | sarra          | Pendidikan Fisika
+            5 | pita           | Pendidikan matematika
+(5 rows)
+
+
+postgres=# INSERT INTO Mahasiswa VALUES (6, 'rifai', 'sistem informasi');
+INSERT 0 1
+postgres=# INSERT INTO Produk VALUES (106, 'buku jurnal', 10000);
+INSERT 0 1
+postgres=#
+postgres=# SELECT * FROM Mahasiswa;
+ id_mahasiswa | nama_mahasiswa |     jurusan
+--------------+----------------+------------------
+            1 | salman         | Teknik sipil
+            2 | adee           | geografi
+            5 | dimas          | PGSD
+            6 | rifai          | sistem informasi
+(4 rows)
+
+
+postgres=# SELECT * FROM Produk;
+ id_produk | nama_produk | harga
+-----------+-------------+-------
+       101 | Pulpen      |  3000
+       103 | Ruler       |  2000
+       104 | Tas         | 50000
+       105 | Botol Minum | 15000
+       102 | Buku Tulis  |  4500
+       106 | buku jurnal | 10000
+(6 rows)
+
+
+postgres=#
+postgres=# DELETE FROM Mahasiswa WHERE id = 6;
+ERROR:  column "id" does not exist
+LINE 1: DELETE FROM Mahasiswa WHERE id = 6;
+                                    ^
+postgres=# DELETE FROM Produk WHERE id_produk = 106;
+DELETE 1
+postgres=#
+postgres=# SELECT * FROM Mahasiswa;
+ id_mahasiswa | nama_mahasiswa |     jurusan
+--------------+----------------+------------------
+            1 | salman         | Teknik sipil
+            2 | adee           | geografi
+            5 | dimas          | PGSD
+            6 | rifai          | sistem informasi
+(4 rows)
+
+
+postgres=# SELECT * FROM Produk;
